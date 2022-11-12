@@ -1,5 +1,5 @@
 import CaptchaBypass from './CaptchaBypass';
 import { Loggers } from './logger';
-
-export { Loggers };
+import { translators } from './translate/translators';
+export { Loggers, translators };
 export default CaptchaBypass;

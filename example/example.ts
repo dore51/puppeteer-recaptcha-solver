@@ -1,6 +1,7 @@
 import * as puppeteer from 'puppeteer';
 import { PuppeteerScreenRecorder } from 'puppeteer-screen-recorder';
 import CaptchaBypass from '../src/CaptchaBypass';
+import { translators } from '../src';
 
 (async () => {
     const browser = await puppeteer.launch({
@@ -9,7 +10,11 @@ import CaptchaBypass from '../src/CaptchaBypass';
 
     const page = await browser.newPage();
 
-    const bypassCaptcha = new CaptchaBypass({ page, maxRetries: 3 });
+    const bypassCaptcha = new CaptchaBypass({
+        page,
+        maxRetries: 3,
+        translator: translators.googleSpeechToText,
+    });
 
     await page.goto(
         'https://recaptcha-demo.appspot.com/recaptcha-v2-checkbox.php'
@@ -18,7 +23,7 @@ import CaptchaBypass from '../src/CaptchaBypass';
     await recorder.start('./example/example.mp4');
 
     const solved = await bypassCaptcha.execute(
-        'JVHWCNWJLWLGN6MFALYLHAPKUFHMNTAC'
+        'WMDYPCJNOP5Q4BO4QFKD4RNMZL37MJJZ' //'JVHWCNWJLWLGN6MFALYLHAPKUFHMNTAC'
     );
     await recorder.stop();
 
