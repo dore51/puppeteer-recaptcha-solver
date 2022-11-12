@@ -1,1 +1,5 @@
-export const Hello = (name: string) => `Hello ${name}`;
+import CaptchaBypass from './CaptchaBypass';
+import { Loggers } from './logger';
+
+export { Loggers };
+export default CaptchaBypass;
