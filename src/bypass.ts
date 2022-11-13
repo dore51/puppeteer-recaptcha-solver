@@ -1,9 +1,8 @@
 import { Page } from 'puppeteer';
-import { Logger } from './logger';
+import { Logger } from './logger/logger';
 import {
     clickOnAudioButton,
     clickOnCheckbox,
-    downloadAudio,
     getAudioSrc,
     isAudioLinkExist,
     isCaptchaChecked,
@@ -15,7 +14,7 @@ import {
     switchToImagesIframe,
     verifyIfBlocked,
 } from './puppeteer/utils';
-import { translateMP3 } from './translate/translate';
+import { downloadAudio, translateMP3 } from './translate/translate';
 import { Translator } from './translate/translators';
 
 interface ExecuteProps {
@@ -44,7 +43,7 @@ export const bypassCaptcha = async ({
         );
         const imagesFrame = await switchToImagesIframe(log, page);
         await clickOnAudioButton(log, imagesFrame);
-        await verifyIfBlocked(imagesFrame, log);
+        await verifyIfBlocked(log, imagesFrame);
 
         while (shouldRetry(numberOfRetries, maxRetries)) {
             numberOfRetries++;
@@ -54,19 +53,19 @@ export const bypassCaptcha = async ({
 
             const isAudioLinkExists = await isAudioLinkExist(log, imagesFrame);
             if (!isAudioLinkExists) {
-                await reloadCaptcha(imagesFrame, log);
+                await reloadCaptcha(log, imagesFrame);
                 continue;
             }
 
             const audioSrc = await getAudioSrc(log, imagesFrame);
             if (!audioSrc) {
-                await reloadCaptcha(imagesFrame, log);
+                await reloadCaptcha(log, imagesFrame);
                 continue;
             }
 
-            const audioBuffer = await downloadAudio(log, page, audioSrc);
+            const audioBuffer = await downloadAudio(log, audioSrc);
             if (!audioBuffer) {
-                await reloadCaptcha(imagesFrame, log);
+                await reloadCaptcha(log, imagesFrame);
                 continue;
             }
 
@@ -77,7 +76,7 @@ export const bypassCaptcha = async ({
                 apiKey,
             });
             if (!audioTranscript) {
-                await reloadCaptcha(imagesFrame, log);
+                await reloadCaptcha(log, imagesFrame);
                 continue;
             }
 
@@ -104,7 +103,7 @@ export const bypassCaptcha = async ({
             }
 
             if (shouldRetry(numberOfRetries, maxRetries)) {
-                await reloadCaptcha(imagesFrame, log);
+                await reloadCaptcha(log, imagesFrame);
             }
         }
     } else {

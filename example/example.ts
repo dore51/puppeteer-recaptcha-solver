@@ -13,7 +13,7 @@ import { translators } from '../src';
     const bypassCaptcha = new CaptchaBypass({
         page,
         maxRetries: 3,
-        translator: translators.googleSpeechToText,
+        translator: translators.witAI,
     });
 
     await page.goto(
@@ -23,7 +23,7 @@ import { translators } from '../src';
     await recorder.start('./example/example.mp4');
 
     const solved = await bypassCaptcha.execute(
-        'AIzaSyDWVUzHGu8HTzg8USjTq-Kii6cJ5yTuS28' //'WMDYPCJNOP5Q4BO4QFKD4RNMZL37MJJZ' //'JVHWCNWJLWLGN6MFALYLHAPKUFHMNTAC'
+        'WMDYPCJNOP5Q4BO4QFKD4RNMZL37MJJZ' //'AIzaSyDWVUzHGu8HTzg8USjTq-Kii6cJ5yTuS28' //'WMDYPCJNOP5Q4BO4QFKD4RNMZL37MJJZ' //'JVHWCNWJLWLGN6MFALYLHAPKUFHMNTAC'
     );
     await recorder.stop();
 

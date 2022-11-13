@@ -1,4 +1,4 @@
-import { Logger } from '../logger';
+import { Logger } from '../logger/logger';
 import { Frame, Page } from 'puppeteer';
 import {
     clickOnElement,
@@ -8,8 +8,6 @@ import {
     switchIframe,
 } from './infra';
 import { Selectors } from './selectors';
-import axios from 'axios';
-import * as https from 'https';
 
 export const switchToCaptchaIframe = async (log: Logger, page: Page) => {
     await log.debug('switching to captcha anchor iframe');
@@ -74,7 +72,7 @@ export const clickOnAudioButton = async (log: Logger, imagesFrame: Frame) => {
     });
 };
 
-export const verifyIfBlocked = async (imagesFrame: Frame, log: Logger) => {
+export const verifyIfBlocked = async (log: Logger, imagesFrame: Frame) => {
     const isBlocked = await isElementExists({
         window: imagesFrame,
         selector: Selectors.captchaBlocked,
@@ -123,26 +121,6 @@ export const getAudioSrc = async (log: Logger, imagesFrame: Frame) => {
     return value;
 };
 
-export const downloadAudio = async (
-    log: Logger,
-    page: Page,
-    audioSrc: string
-): Promise<ArrayBuffer | null> => {
-    await log.debug('downloading audio');
-    try {
-        const res = await axios.get<ArrayBuffer>(audioSrc, {
-            responseType: 'arraybuffer',
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false,
-            }),
-        });
-        return res.data;
-    } catch (e) {
-        await log.warn(`Failed to download audio: ${e}`);
-        return null;
-    }
-};
-
 export const setCaptchaText = async (
     log: Logger,
     imagesFrame: Frame,
@@ -166,7 +144,7 @@ export const submitCaptcha = async (log: Logger, imagesFrame: Frame) => {
     });
 };
 
-export const reloadCaptcha = async (frame: Frame, log: Logger) => {
+export const reloadCaptcha = async (log: Logger, frame: Frame) => {
     await log.debug('Reloading captcha');
     await clickOnElement({
         window: frame,

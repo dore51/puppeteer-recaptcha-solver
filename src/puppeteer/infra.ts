@@ -1,34 +1,12 @@
-import { Selector } from './selectors';
-import { Frame, Page } from 'puppeteer';
-import { Logger } from '../logger';
-
-export type Window = Page | Frame;
-
-interface BaseProps {
-    window: Window;
-    log: Logger;
-    selector: Selector;
-}
-
-type SwitchFrameProps = BaseProps & {
-    window: Page;
-    WaitForSubElement: Selector;
-};
-
-type SetTextProps = BaseProps & { text: string };
-
-type WaitForSelectorProps = BaseProps & {
-    visible?: boolean;
-    timeout: number;
-};
-
-type GetAttributeProps = BaseProps & { attribute: string; visible?: boolean };
-
-type FuncProps =
-    | BaseProps
-    | SwitchFrameProps
-    | SetTextProps
-    | WaitForSelectorProps;
+import { Frame } from 'puppeteer';
+import {
+    BaseProps,
+    FuncProps,
+    GetAttributeProps,
+    SetTextProps,
+    SwitchFrameProps,
+    WaitForSelectorProps,
+} from './types';
 
 const DefaultTimeout = {
     SwitchFrame: 5000,

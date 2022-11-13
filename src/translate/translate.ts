@@ -1,5 +1,7 @@
-import { Logger } from '../logger';
+import { Logger } from '../logger/logger';
 import { Translator } from './translators';
+import axios from 'axios';
+import * as https from 'https';
 
 interface TranslateMP3Props {
     audioBuffer: ArrayBuffer;
@@ -27,6 +29,25 @@ export const translateMP3 = async ({
         return null;
     } catch (e) {
         await log.error(`Error translating captcha audio: ${e}`);
+        return null;
+    }
+};
+
+export const downloadAudio = async (
+    log: Logger,
+    audioSrc: string
+): Promise<ArrayBuffer | null> => {
+    await log.debug('downloading audio');
+    try {
+        const res = await axios.get<ArrayBuffer>(audioSrc, {
+            responseType: 'arraybuffer',
+            httpsAgent: new https.Agent({
+                rejectUnauthorized: false,
+            }),
+        });
+        return res.data;
+    } catch (e) {
+        await log.warn(`Failed to download audio: ${e}`);
         return null;
     }
 };

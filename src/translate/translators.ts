@@ -54,8 +54,6 @@ export const googleSpeechToText: Translator = async (
         }
     );
 
-    console.log('google data', data);
-
     const parsed =
         typeof data === 'string'
             ? JSON.parse(data.split('\r\n').slice(-1)[0] || '{}')
