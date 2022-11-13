@@ -41,20 +41,15 @@ export const googleSpeechToText: Translator = async (
     }
 
     const { data } = await axios.post<string>(
-        'https://speech.googleapis.com/v1/speech:recognize',
+        `https://speech.googleapis.com/v1p1beta1/speech:recognize?key=${apiKey}`,
         {
             config: {
-                encoding: 'LINEAR16',
+                encoding: 'MP3',
                 sampleRateHertz: 16000,
                 languageCode: 'en-US',
             },
             audio: {
                 content: Buffer.from(audioBuffer).toString('base64'),
-            },
-        },
-        {
-            headers: {
-                Authorization: `Bearer ${apiKey}`,
             },
         }
     );

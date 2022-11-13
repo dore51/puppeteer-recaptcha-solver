@@ -23,7 +23,7 @@ import { translators } from '../src';
     await recorder.start('./example/example.mp4');
 
     const solved = await bypassCaptcha.execute(
-        'WMDYPCJNOP5Q4BO4QFKD4RNMZL37MJJZ' //'JVHWCNWJLWLGN6MFALYLHAPKUFHMNTAC'
+        'AIzaSyDWVUzHGu8HTzg8USjTq-Kii6cJ5yTuS28' //'WMDYPCJNOP5Q4BO4QFKD4RNMZL37MJJZ' //'JVHWCNWJLWLGN6MFALYLHAPKUFHMNTAC'
     );
     await recorder.stop();
 
