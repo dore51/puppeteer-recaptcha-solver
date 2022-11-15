@@ -1,11 +1,11 @@
 {
-  "name": "puppeteer-recaptcha-solver",
+  "name": "@dore51/puppeteer-recaptcha-solver",
   "version": "1.0.0",
   "description": "ReCaptcha solver for puppeteer",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "test": "jest --config jestconfig.json --watch",
+    "test": "jest --config jestconfig.json",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json",
@@ -48,5 +48,8 @@
   },
   "files": [
     "lib/**/*"
-  ]
+  ],
+  "publishConfig": {
+    "registry":"https://npm.pkg.github.com/"
+  }
 }
