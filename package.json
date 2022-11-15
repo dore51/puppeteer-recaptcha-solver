@@ -1,7 +1,7 @@
 {
-  "name": "captcha-bypass",
+  "name": "puppeteer-recaptcha-solver",
   "version": "1.0.0",
-  "description": "Captcha solver",
+  "description": "ReCaptcha solver for puppeteer",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dore51/captcha-bypass.git"
+    "url": "git+https://github.com/dore51/puppeteer-recaptcha-solver.git"
   },
   "keywords": [
     "captcha",
@@ -28,9 +28,9 @@
   "author": "dore51",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/dore51/captcha-bypass/issues"
+    "url": "https://github.com/dore51/puppeteer-recaptcha-solver/issues"
   },
-  "homepage": "https://github.com/dore51/captcha-bypass#readme",
+  "homepage": "https://github.com/dore51/puppeteer-recaptcha-solver#readme",
   "devDependencies": {
     "@types/jest": "^29.2.2",
     "jest": "^29.3.1",

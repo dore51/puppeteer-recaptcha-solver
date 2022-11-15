@@ -10,7 +10,7 @@ interface TranslateMP3Props {
     apiKey?: string;
 }
 
-export const translateMP3 = async ({
+export const translateAudio = async ({
     audioBuffer,
     log,
     translator,

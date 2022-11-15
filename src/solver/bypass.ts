@@ -1,5 +1,5 @@
 import { Page } from 'puppeteer';
-import { Logger } from './logger/logger';
+import { Logger } from '../logger/logger';
 import {
     clickOnAudioButton,
     clickOnCheckbox,
@@ -13,9 +13,9 @@ import {
     switchToCaptchaIframe,
     switchToImagesIframe,
     verifyIfBlocked,
-} from './puppeteer/utils';
-import { downloadAudio, translateMP3 } from './translate/translate';
-import { Translator } from './translate/translators';
+} from '../puppeteer/utils';
+import { downloadAudio, translateAudio } from '../translate/translate';
+import { Translator } from '../translate/translators';
 
 interface ExecuteProps {
     page: Page;
@@ -69,7 +69,7 @@ export const bypassCaptcha = async ({
                 continue;
             }
 
-            const audioTranscript = await translateMP3({
+            const audioTranscript = await translateAudio({
                 audioBuffer,
                 log,
                 translator,

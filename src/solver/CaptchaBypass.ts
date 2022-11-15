@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer';
-import { defaultLogger, Logger } from './logger/logger';
+import { defaultLogger, Logger } from '../logger/logger';
 import { bypassCaptcha } from './bypass';
-import { Translator, witAI } from './translate/translators';
+import { Translator, witAI } from '../translate/translators';
 
 interface CaptchaBypassProps {
     page: Page;

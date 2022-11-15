@@ -1,6 +1,6 @@
 import * as puppeteer from 'puppeteer';
 import { PuppeteerScreenRecorder } from 'puppeteer-screen-recorder';
-import CaptchaBypass from '../src/CaptchaBypass';
+import CaptchaBypass from '../src';
 import { translators } from '../src';
 
 (async () => {

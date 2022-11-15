@@ -1,3 +1,5 @@
+import noop from 'lodash/noop';
+
 export interface Logger {
     log(message: string): void | Promise<void>;
     error(message: string): void | Promise<void>;
@@ -16,11 +18,11 @@ export const defaultLogger: Logger = {
 };
 
 export const noopLogger: Logger = {
-    log: () => {},
-    error: () => {},
-    warn: () => {},
-    info: () => {},
-    debug: () => {},
+    log: noop,
+    error: noop,
+    warn: noop,
+    info: noop,
+    debug: noop,
 };
 
 export const Loggers = {
