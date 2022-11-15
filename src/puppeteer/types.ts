@@ -1,6 +1,6 @@
 import { Frame, Page } from 'puppeteer';
-import { Selector } from './selectors';
 import { Logger } from '../logger/logger';
+import { Selector } from './selector';
 
 export type Window = Page | Frame;
 export interface BaseProps {

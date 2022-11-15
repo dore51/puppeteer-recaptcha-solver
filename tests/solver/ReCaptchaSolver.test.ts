@@ -1,14 +1,14 @@
 import { Translator } from '../../src/translate/translators';
 import { Page } from 'puppeteer';
 import CaptchaBypass, { Loggers, translators } from '../../src/';
-import * as bypassCaptcha from '../../src/solver/bypass';
+import * as bypassCaptcha from '../../src/solver/solver';
 
 const mockPage: Page = {} as Page;
 const mockLogger = Loggers.noop;
 const mockTranslator: Translator = jest.fn();
 const mockBypass = jest.fn();
 
-jest.spyOn(bypassCaptcha, 'bypassCaptcha').mockImplementation(mockBypass);
+jest.spyOn(bypassCaptcha, 'solveCaptcha').mockImplementation(mockBypass);
 
 describe('CaptchaBypass', () => {
     let captchaBypass: CaptchaBypass;
@@ -23,12 +23,12 @@ describe('CaptchaBypass', () => {
 
     it('should create instance of CaptchaBypass', () => {
         expect(captchaBypass).toBeInstanceOf(CaptchaBypass);
-        expect(captchaBypass).toHaveProperty('execute');
+        expect(captchaBypass).toHaveProperty('solve');
     });
 
     it('should execute bypassCaptcha', async () => {
         mockBypass.mockResolvedValue(true);
-        const res = await captchaBypass.execute('test-api-key');
+        const res = await captchaBypass.solve('test-api-key');
         expect(res).toBe(true);
         expect(mockBypass).toBeCalledWith({
             page: mockPage,
@@ -41,7 +41,7 @@ describe('CaptchaBypass', () => {
 
     it('should return false if bypassCaptcha throws error', async () => {
         mockBypass.mockRejectedValue('test');
-        const res = await captchaBypass.execute('test-api-key');
+        const res = await captchaBypass.solve('test-api-key');
         expect(res).toBe(false);
     });
 
@@ -50,7 +50,7 @@ describe('CaptchaBypass', () => {
             page: mockPage,
         });
 
-        await defaultCaptchaByPass.execute('test-api-key');
+        await defaultCaptchaByPass.solve('test-api-key');
         expect(mockBypass).toBeCalledWith({
             page: mockPage,
             log: Loggers.default,

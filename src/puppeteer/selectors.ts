@@ -1,9 +1,4 @@
-export class Selector {
-    public constructor(
-        public readonly value: string,
-        public readonly name: string
-    ) {}
-}
+import { Selector } from './selector';
 
 export class Selectors {
     static readonly anchorFrame = new Selector('api2/anchor', 'captcha iframe');

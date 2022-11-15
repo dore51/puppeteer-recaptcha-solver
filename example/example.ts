@@ -1,6 +1,6 @@
 import * as puppeteer from 'puppeteer';
 import { PuppeteerScreenRecorder } from 'puppeteer-screen-recorder';
-import CaptchaBypass from '../src';
+import ReCaptchaSolver from '../src';
 import { translators } from '../src';
 
 (async () => {
@@ -10,7 +10,7 @@ import { translators } from '../src';
 
     const page = await browser.newPage();
 
-    const bypassCaptcha = new CaptchaBypass({
+    const bypassCaptcha = new ReCaptchaSolver({
         page,
         maxRetries: 3,
         translator: translators.witAI,
@@ -22,7 +22,7 @@ import { translators } from '../src';
     const recorder = new PuppeteerScreenRecorder(page);
     await recorder.start('./example/example.mp4');
 
-    const solved = await bypassCaptcha.execute(
+    const solved = await bypassCaptcha.solve(
         'WMDYPCJNOP5Q4BO4QFKD4RNMZL37MJJZ' //'AIzaSyDWVUzHGu8HTzg8USjTq-Kii6cJ5yTuS28' //'WMDYPCJNOP5Q4BO4QFKD4RNMZL37MJJZ' //'JVHWCNWJLWLGN6MFALYLHAPKUFHMNTAC'
     );
     await recorder.stop();

@@ -17,20 +17,21 @@ import {
 import { downloadAudio, translateAudio } from '../translate/translate';
 import { Translator } from '../translate/translators';
 
-interface ExecuteProps {
+interface SolveCaptchaProps {
     page: Page;
     log: Logger;
     translator: Translator;
     maxRetries: number;
     apiKey: string;
 }
-export const bypassCaptcha = async ({
+
+export const solveCaptcha = async ({
     page,
     log,
     maxRetries,
     translator,
     apiKey,
-}: ExecuteProps) => {
+}: SolveCaptchaProps) => {
     let numberOfRetries = 0;
     const captchaIframe = await switchToCaptchaIframe(log, page);
     await clickOnCheckbox(log, captchaIframe);
