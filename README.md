@@ -5,12 +5,7 @@
 
 > Google Recapctha v2 solver with puppeteer. You can simply use it in your project by passing to the constructor your `Page` object.
 > The solver is using SpeechToText recognition, you can use one of our integrated solvers with your API key or to provide your own solving function.
-> You can integrate your own logger to the constructor.
-
-## Prerequisites
-
-This project requires NodeJS (version 8 or later) and NPM.
-[Node](http://nodejs.org/) and [NPM](https://npmjs.org/) are really easy to install.
+> You can also integrate your own logger.
 
 ## Table of contents
 
@@ -24,12 +19,20 @@ This project requires NodeJS (version 8 or later) and NPM.
     - [Constructor](#constructor)
     - [Solve](#solve)
     - [General Types](#general-types)
+      - [Examples](#examples)
+        - [Default Logger](#default-logger)
+        - [WitAI Translator](#witai-translator)
+        - [Google SpeechToText Translator](#google-speechtotext-translator)
   - [Contributing](#contributing)
-  - [Credits](#credits)
   - [Built With](#built-with)
   - [Versioning](#versioning)
   - [Authors](#authors)
   - [License](#license)
+
+## Prerequisites
+
+This project requires NodeJS (version 8 or later) and NPM.
+[Node](http://nodejs.org/) and [NPM](https://npmjs.org/) are really easy to install.
 
 ## Getting Started
 
@@ -202,6 +205,7 @@ const googleSpeechToText: Translator = async (
 
     return parsed?.results?.[0]?.alternatives?.[0]?.transcript;
 };
+```
 
 
 ## Contributing
@@ -245,9 +249,6 @@ inside your local `lib/` folder
 ```sh
 $ npm publish
 ```
-
-*Note* this requires
-[Building a distribution version](#building-a-distribution-version) first.
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
