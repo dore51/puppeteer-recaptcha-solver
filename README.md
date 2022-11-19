@@ -1,10 +1,11 @@
 [![npm version](https://d25lcipzij17d.cloudfront.net/badge.svg?id=js&r=r&type=6e&v=1.0.0&x2=0)](https://d25lcipzij17d.cloudfront.net/badge.svg?id=js&r=r&type=6e&v=1.0.0&x2=0)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
-# puppeteer-captcha-solver
+# puppeteer-recaptcha-solver
 
-> Google Recapctha v2 solver with puppeteer.
+> Google Recapctha v2 solver with puppeteer. You can simply use it in your project by passing to the constructor your `Page` object.
 > The solver is using SpeechToText recognition, you can use one of our integrated solvers with your API key or to provide your own solving function.
+> You can integrate your own logger to the constructor.
 
 ## Prerequisites
 
@@ -13,20 +14,16 @@ This project requires NodeJS (version 8 or later) and NPM.
 
 ## Table of contents
 
-- [Project Name](#project-name)
+- [Puppeteer Recaptcha Solver](#pupprer-recaptcha-solver)
   - [Prerequisites](#prerequisites)
   - [Table of contents](#table-of-contents)
   - [Getting Started](#getting-started)
   - [Installation](#installation)
   - [Usage](#usage)
-    - [Serving the app](#serving-the-app)
-    - [Running the tests](#running-the-tests)
-    - [Building a distribution version](#building-a-distribution-version)
-    - [Serving the distribution version](#serving-the-distribution-version)
   - [API](#api)
-    - [useBasicFetch](#usebasicfetch)
-      - [Options](#options)
-    - [fetchData](#fetchdata)
+    - [Constructor](#constructor)
+    - [Solve](#solve)
+    - [General Types](#general-types)
   - [Contributing](#contributing)
   - [Credits](#credits)
   - [Built With](#built-with)
@@ -49,9 +46,42 @@ To install and set up the library, run:
 $ npm install @dore51/puppeteer-recaptcha-solver
 ```
 
+# Usage
+
+To use, simply create the object and execute the `solve` command.
+
+Example:
+
+```ts
+(async () => {
+    const browser = await puppeteer.launch({
+        headless: false,
+    });
+    const page = await browser.newPage();
+
+    const bypassCaptcha = new ReCaptchaSolver({
+        page,
+        maxRetries: 3,
+        translator: Translators.witAI,
+        apiKey: 'YOUR_API_KEY
+    });
+
+    await page.goto(
+        'https://recaptcha-demo.appspot.com/recaptcha-v2-checkbox.php'
+    );
+
+    const solved = await bypassCaptcha.solve();
+    await recorder.stop();
+
+    console.log('Captcha solved: ', solved);
+    await page.screenshot({ path: 'example/example.png' });
+    await browser.close();
+})();
+```
+
 ## API
 
-### constructor
+### Constructor
 
 
 ```ts
@@ -67,7 +97,7 @@ A constructor to the object.
 
 #### Fields
 
-Supported options for the `construction` field are listed below.
+Supported options for the `constructor` field are listed below.
 
 | Field | Type | Default value | Required | Description |
 | --- | --- | --- | --- | --- |
@@ -78,7 +108,7 @@ Supported options for the `construction` field are listed below.
 | apiKey | string | | No | API key to your translation service | 
 
 
-### solve
+### Solve
 
 ```ts
 solve(): Promise<boolean>
@@ -87,150 +117,112 @@ solve(): Promise<boolean>
 A command that will start the solving process.
 Returns a `Promise<boolean>` to indicaate if the captcha succesfully solved.
 
-## Types
+# General Types
 
 | Type | Signature | Description |
 | --- | -------------------------------- | --- |
 | Logger | <pre>interface Logger {<br>  log(message: string): void \| Promise\<void\>;<br>  error(message: string): void \| Promise\<void\>;<br>  warn(message: string): void \| Promise\<void\>;<br>  info(message: string): void \| Promise\<void\>;<br>  debug(message: string): void \| Promise\<void\>;<br>}</pre> | A logger object that the solver will use. |
-| Translator | <pre>type Translator = (<br>  audioBuffer: ArrayBuffer,<br>  apiKey?: string<br>) => Promise\<string \| null\>;</pre> | A tranlate function that gets an `ArrayBuffer` of the captcha sound an an API key |
+| Translator | <pre>type Translator = (<br>  audioBuffer: ArrayBuffer,<br>  apiKey?: string<br>) => Promise\<string \| null\>;</pre> | A tranlate function that gets an `ArrayBuffer` and should return the translation |
 
 
-# Usage
+## Examples
 
-To use 
+### default Logger
 
-Example:
-
-```tsx
-const MyComponent: React.FC = () => {
-  const { data, error, loading } = useBasicFetch('https://api.icndb.com/jokes/random');
-
-  if (error) {
-    return <p>Error</p>;
-  }
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  return (
-    <div className="App">
-      <h2>Chuck Norris Joke of the day</h2>
-      {data && data.value && <p>{data.value.joke}</p>}
-    </div>
-  );
+```ts
+const defaultLogger: Logger = {
+    log: (message: string) => console.log('[LOG]', message),
+    error: (message: string) => console.error('[ERROR]', message),
+    warn: (message: string) => console.warn('[WARN]', message),
+    info: (message: string) => console.info('[INFO]', message),
+    debug: (message: string) => console.debug('[DEBUG]', message),
 };
 ```
 
-`delay`
+### witAI Translator
 
-| Type | Default value | Description |
-| --- | --- | --- |
-| number | 0 | Time in milliseconds |
+```ts
+const witAI: Translator = async (
+    audioBuffer: ArrayBuffer,
+    apiKey?: string
+) => {
+    if (!apiKey) {
+        throw new Error('witAI translator requires API key');
+    }
 
-If present, the request will be delayed by the given amount of time
+    const { data } = await axios.post<string>(
+        'https://api.wit.ai/speech?v=20220622',
+        audioBuffer,
+        {
+            headers: {
+                Authorization: `Bearer ${apiKey}`,
+                'Content-Type': 'audio/mpeg3',
+            },
+        }
+    );
 
-Example:
+    const parsed =
+        typeof data === 'string'
+            ? JSON.parse(data.split('\r\n').slice(-1)[0] || '{}')
+            : data;
 
-```tsx
-type Joke = {
-  value: {
-    id: number;
-    joke: string;
-  };
-};
-
-const MyComponent: React.FC = () => {
-  const { data, error, loading } = useBasicFetch<Joke>('https://api.icndb.com/jokes/random', 2000);
-
-  if (error) {
-    return <p>Error</p>;
-  }
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  return (
-    <div className="App">
-      <h2>Chuck Norris Joke of the day</h2>
-      {data && data.value && <p>{data.value.joke}</p>}
-    </div>
-  );
-};
+    return parsed?.text;
+}
 ```
 
-### fetchData
+### Google SpeechToText translator
 
-```js
-fetchData(url: string)
-```
+```ts
+const googleSpeechToText: Translator = async (
+    audioBuffer: ArrayBuffer,
+    apiKey?: string
+) => {
+    if (!apiKey) {
+        throw new Error('googleSpeechToText translator requires API key');
+    }
 
-Perform an asynchronous http request against a given url
+    const { data } = await axios.post<string>(
+        `https://speech.googleapis.com/v1p1beta1/speech:recognize?key=${apiKey}`,
+        {
+            config: {
+                encoding: 'MP3',
+                sampleRateHertz: 16000,
+                languageCode: 'en-US',
+            },
+            audio: {
+                content: Buffer.from(audioBuffer).toString('base64'),
+            },
+        }
+    );
 
-```tsx
-type Joke = {
-  value: {
-    id: number;
-    joke: string;
-  };
+    const parsed =
+        typeof data === 'string'
+            ? JSON.parse(data.split('\r\n').slice(-1)[0] || '{}')
+            : data;
+
+    return parsed?.results?.[0]?.alternatives?.[0]?.transcript;
 };
 
-const ChuckNorrisJokes: React.FC = () => {
-  const { data, fetchData, error, loading } = useBasicFetch<Joke>();
-  const [jokeId, setJokeId] = useState(1);
-
-  useEffect(() => {
-    fetchData(`https://api.icndb.com/jokes/${jokeId}`);
-  }, [jokeId, fetchData]);
-
-  const handleNext = () => setJokeId(jokeId + 1);
-
-  if (error) {
-    return <p>Error</p>;
-  }
-
-  const jokeData = data && data.value;
-
-  return (
-    <div className="Comments">
-      {loading && <p>Loading...</p>}
-      {!loading && jokeData && (
-        <div>
-          <p>Joke ID: {jokeData.id}</p>
-          <p>{jokeData.joke}</p>
-        </div>
-      )}
-      {!loading && jokeData && !jokeData.joke && <p>{jokeData}</p>}
-      <button disabled={loading} onClick={handleNext}>
-        Next Joke
-      </button>
-    </div>
-  );
-};
-```
 
 ## Contributing
 
 Start with cloning this repo on your local machine:
 
 ```sh
-$ git clone https://github.com/ORG/PROJECT.git
-$ cd PROJECT
+$ git clone https://github.com/dore51/puppeteer-captcha-solver.git
+$ cd puppeteer-captcha-solver
 ```
 
 To install and set up the library, run:
 
 ```sh
-$ npm install -S myLib
+$ npm install
 ```
 
-## Usage
-
-### Serving the app
+### To check that everything works
 
 ```sh
-$ npm start
+$ npm run example
 ```
 
 ### Running the tests
@@ -246,16 +238,13 @@ $ npm run build
 ```
 
 This task will create a distribution version of the project
-inside your local `dist/` folder
+inside your local `lib/` folder
 
-### Serving the distribution version
+### publishing the distribution version
 
 ```sh
-$ npm run serve:dist
+$ npm publish
 ```
-
-This will use `lite-server` for servign your already
-generated distribution version of the project.
 
 *Note* this requires
 [Building a distribution version](#building-a-distribution-version) first.
@@ -269,16 +258,17 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 5.  Push to the branch: `git push origin my-new-feature`
 6.  Submit a pull request :sunglasses:
 
-## Credits
-
-TODO: Write credits
 
 ## Built With
 
-* Dropwizard - Bla bla bla
-* Maven - Maybe
-* Atom - ergaerga
-* Love
+* node
+* puppeteer - Bla bla bla
+* prettier - Maybe
+* axios - ergaerga
+* jest
+* puppeteer-screen-recorder
+* tslint
+
 
 ## Versioning
 
@@ -286,10 +276,10 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **John Doe** - *Initial work* - [JohnDoe](https://github.com/JohnDoe)
+* **Dor Eitan** - [Github](https://github.com/dore51)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/dore51/puppeteer-recptcha-solver/contributors) who participated in this project.
 
 ## License
 
-[MIT License](https://andreasonny.mit-license.org/2019) © Andrea SonnY
+[MIT License](https://andreasonny.mit-license.org/2019) © Dor Eitan
