@@ -3,7 +3,8 @@
 
 # puppeteer-captcha-solver
 
-> Write a project description
+> Google Recapctha v2 solver with puppeteer.
+> The solver is using SpeechToText recognition, you can use one of our integrated solvers with your API key or to provide your own solving function.
 
 ## Prerequisites
 
@@ -53,13 +54,13 @@ $ npm install @dore51/puppeteer-recaptcha-solver
 ### constructor
 
 
-```js
+```ts
 ReCaptchaSolver({
     page: Page;
     log?: Logger;
     translator?: Translator;
     maxRetries?: number;
-})
+}): ReCaptchaSolver
 ```
 
 A constructor to the object.
@@ -74,14 +75,30 @@ Supported options for the `construction` field are listed below.
 | log | Logger | `console.log` | No | A logger that the solver will use. You can also use the default logger or `noopLogger` to disable the logs |  
 | translator | Translator | witAI | No | A translator that the solver will use to translate the audio to text. You can can choose between witAI or googleSpeechToText by passing `Translators.witAI` or `Translators.googeSpeechToText` or passing you own `Translator` function. |
 | maxRetries | number | 3 | No | Total number of retreis untill the captcha is solved |
-
+| apiKey | string | | No | API key to your translation service | 
 
 
 ### solve
 
-```js
-solve(apiKey: string)
+```ts
+solve(): Promise<boolean>
 ```
+
+A command that will start the solving process.
+Returns a `Promise<boolean>` to indicaate if the captcha succesfully solved.
+
+## Types
+
+| Type | Signature | Description |
+| --- | --- | --- |
+| Logger | interface Logger {
+    log(message: string): void | Promise<void>;
+    error(message: string): void | Promise<void>;
+    warn(message: string): void | Promise<void>;
+    info(message: string): void | Promise<void>;
+    debug(message: string): void | Promise<void>;
+} | asd |
+
 
 # Usage
 
