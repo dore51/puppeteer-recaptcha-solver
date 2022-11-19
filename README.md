@@ -90,14 +90,9 @@ Returns a `Promise<boolean>` to indicaate if the captcha succesfully solved.
 ## Types
 
 | Type | Signature | Description |
-| --- | --- | --- |
-| Logger | interface Logger {
-    log(message: string): void | Promise<void>;
-    error(message: string): void | Promise<void>;
-    warn(message: string): void | Promise<void>;
-    info(message: string): void | Promise<void>;
-    debug(message: string): void | Promise<void>;
-} | asd |
+| --- | -------------------------------- | --- |
+| Logger | <pre>interface Logger {<br>  log(message: string): void \| Promise\<void\>;<br>  error(message: string): void \| Promise\<void\>;<br>  warn(message: string): void \| Promise\<void\>;<br>  info(message: string): void \| Promise\<void\>;<br>  debug(message: string): void \| Promise\<void\>;<br>}</pre> | A logger object that the solver will use. |
+| Translator | <pre>type Translator = (<br>  audioBuffer: ArrayBuffer,<br>  apiKey?: string<br>) => Promise\<string \| null\>;</pre> | A tranlate function that gets an `ArrayBuffer` of the captcha sound an an API key |
 
 
 # Usage
