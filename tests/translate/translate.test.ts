@@ -1,4 +1,4 @@
-import { Logger } from '../../src/logger/logger';
+import { Logger } from '../../src';
 import { translateAudio, downloadAudio } from '../../src/translate/translate';
 import axios from 'axios';
 
@@ -17,7 +17,7 @@ describe('translate service', () => {
     describe('translateAudio', () => {
         const props = {
             audioBuffer: mockAudioBuffer,
-            log: mockLogger,
+            logger: mockLogger,
             translator: mockTranslator,
         };
 

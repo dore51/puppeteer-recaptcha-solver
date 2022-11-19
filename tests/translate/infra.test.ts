@@ -6,7 +6,7 @@ const mockSwitchIframeProps = {
     window: {
         waitForFrame: jest.fn(),
     },
-    log: Loggers.noop,
+    logger: Loggers.noop,
     selector: {
         name: 'selector',
         value: 'selector',
@@ -22,7 +22,7 @@ const mockFrame = {
 describe('infra', () => {
     describe('switchIframe', () => {
         it('should switch to iframe', async () => {
-            const { window, log, selector, WaitForSubElement } =
+            const { window, logger, selector, WaitForSubElement } =
                 mockSwitchIframeProps;
 
             window.waitForFrame.mockResolvedValue(mockFrame);
@@ -30,7 +30,7 @@ describe('infra', () => {
 
             const frame = await switchIframe({
                 window: window as unknown as Page,
-                log,
+                logger,
                 selector,
                 WaitForSubElement,
             });

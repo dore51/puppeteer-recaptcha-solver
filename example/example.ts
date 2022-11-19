@@ -1,19 +1,19 @@
 import * as puppeteer from 'puppeteer';
 import { PuppeteerScreenRecorder } from 'puppeteer-screen-recorder';
 import ReCaptchaSolver from '../src';
-import { translators } from '../src';
+import { Translators } from '../src';
 
 (async () => {
     const browser = await puppeteer.launch({
         headless: false,
     });
-
     const page = await browser.newPage();
 
     const bypassCaptcha = new ReCaptchaSolver({
         page,
         maxRetries: 3,
-        translator: translators.witAI,
+        translator: Translators.witAI,
+        apiKey: 'WMDYPCJNOP5Q4BO4QFKD4RNMZL37MJJZ', //'AIzaSyDWVUzHGu8HTzg8USjTq-Kii6cJ5yTuS28' //'WMDYPCJNOP5Q4BO4QFKD4RNMZL37MJJZ' //'JVHWCNWJLWLGN6MFALYLHAPKUFHMNTAC'
     });
 
     await page.goto(
@@ -22,9 +22,7 @@ import { translators } from '../src';
     const recorder = new PuppeteerScreenRecorder(page);
     await recorder.start('./example/example.mp4');
 
-    const solved = await bypassCaptcha.solve(
-        'WMDYPCJNOP5Q4BO4QFKD4RNMZL37MJJZ' //'AIzaSyDWVUzHGu8HTzg8USjTq-Kii6cJ5yTuS28' //'WMDYPCJNOP5Q4BO4QFKD4RNMZL37MJJZ' //'JVHWCNWJLWLGN6MFALYLHAPKUFHMNTAC'
-    );
+    const solved = await bypassCaptcha.solve();
     await recorder.stop();
 
     console.log('Captcha solved: ', solved);

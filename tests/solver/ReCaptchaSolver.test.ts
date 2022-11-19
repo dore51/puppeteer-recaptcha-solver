@@ -1,6 +1,6 @@
 import { Translator } from '../../src/translate/translators';
 import { Page } from 'puppeteer';
-import CaptchaBypass, { Loggers, translators } from '../../src/';
+import CaptchaBypass, { Loggers, Translators } from '../../src/';
 import * as bypassCaptcha from '../../src/solver/solver';
 
 const mockPage: Page = {} as Page;
@@ -15,9 +15,10 @@ describe('CaptchaBypass', () => {
     beforeEach(() => {
         captchaBypass = new CaptchaBypass({
             page: mockPage,
-            log: mockLogger,
+            logger: mockLogger,
             translator: mockTranslator,
             maxRetries: 1,
+            apiKey: 'test-api-key',
         });
     });
 
@@ -28,11 +29,11 @@ describe('CaptchaBypass', () => {
 
     it('should execute bypassCaptcha', async () => {
         mockBypass.mockResolvedValue(true);
-        const res = await captchaBypass.solve('test-api-key');
+        const res = await captchaBypass.solve();
         expect(res).toBe(true);
         expect(mockBypass).toBeCalledWith({
             page: mockPage,
-            log: mockLogger,
+            logger: mockLogger,
             translator: mockTranslator,
             maxRetries: 1,
             apiKey: 'test-api-key',
@@ -41,21 +42,22 @@ describe('CaptchaBypass', () => {
 
     it('should return false if bypassCaptcha throws error', async () => {
         mockBypass.mockRejectedValue('test');
-        const res = await captchaBypass.solve('test-api-key');
+        const res = await captchaBypass.solve();
         expect(res).toBe(false);
     });
 
     it('should check constructor default values', async () => {
         const defaultCaptchaByPass = new CaptchaBypass({
             page: mockPage,
+            apiKey: 'test-api-key',
         });
 
-        await defaultCaptchaByPass.solve('test-api-key');
+        await defaultCaptchaByPass.solve();
         expect(mockBypass).toBeCalledWith({
             page: mockPage,
-            log: Loggers.default,
+            logger: Loggers.default,
             maxRetries: 3,
-            translator: translators.witAI,
+            translator: Translators.witAI,
             apiKey: 'test-api-key',
         });
     });

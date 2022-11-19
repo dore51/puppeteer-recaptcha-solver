@@ -9,146 +9,152 @@ import {
 } from './infra';
 import { Selectors } from './selectors';
 
-export const switchToCaptchaIframe = async (log: Logger, page: Page) => {
-    await log.debug('switching to captcha anchor iframe');
+export const switchToCaptchaIframe = async (logger: Logger, page: Page) => {
+    await logger.debug('switching to captcha anchor iframe');
     return switchIframe({
         window: page,
-        log,
+        logger,
         selector: Selectors.anchorFrame,
         WaitForSubElement: Selectors.captchaCheckBox,
     });
 };
 
-export const clickOnCheckbox = async (log: Logger, captchaIframe: Frame) => {
-    await log.debug('clicking on captcha checkbox');
+export const clickOnCheckbox = async (logger: Logger, captchaIframe: Frame) => {
+    await logger.debug('clicking on captcha checkbox');
     await clickOnElement({
         window: captchaIframe,
         selector: Selectors.captchaCheckBox,
-        log,
+        logger,
     });
 };
 
-export const isCaptchaChecked = async (log: Logger, captchaIframe: Frame) => {
-    await log.debug('Checking if captcha is checked');
+export const isCaptchaChecked = async (
+    logger: Logger,
+    captchaIframe: Frame
+) => {
+    await logger.debug('Checking if captcha is checked');
     return isElementExists({
         window: captchaIframe,
         selector: Selectors.captchaChecked,
-        log,
+        logger,
         visible: true,
         timeout: 2000,
     });
 };
 
 export const isMultipleSolutionError = async (
-    log: Logger,
+    logger: Logger,
     imagesIframe: Frame
 ) => {
-    await log.debug('Checking if multiple solution error exists');
+    await logger.debug('Checking if multiple solution error exists');
     return isElementExists({
         window: imagesIframe,
         selector: Selectors.multipleSolutionError,
-        log,
+        logger,
         visible: true,
         timeout: 500,
     });
 };
 
-export const switchToImagesIframe = async (log: Logger, page: Page) => {
-    await log.debug('switching to captcha images iframe');
+export const switchToImagesIframe = async (logger: Logger, page: Page) => {
+    await logger.debug('switching to captcha images iframe');
     return switchIframe({
         window: page,
-        log,
+        logger,
         selector: Selectors.captchaImagesIframe,
         WaitForSubElement: Selectors.captchaImage,
     });
 };
 
-export const clickOnAudioButton = async (log: Logger, imagesFrame: Frame) => {
-    await log.debug('clicking on audio captcha button');
+export const clickOnAudioButton = async (
+    logger: Logger,
+    imagesFrame: Frame
+) => {
+    await logger.debug('clicking on audio captcha button');
     await clickOnElement({
         window: imagesFrame,
         selector: Selectors.captchaAudioButton,
-        log,
+        logger,
     });
 };
 
-export const verifyIfBlocked = async (log: Logger, imagesFrame: Frame) => {
+export const verifyIfBlocked = async (logger: Logger, imagesFrame: Frame) => {
     const isBlocked = await isElementExists({
         window: imagesFrame,
         selector: Selectors.captchaBlocked,
-        log,
+        logger,
         visible: true,
         timeout: 1000,
     });
 
     if (isBlocked) {
         const error = 'You are blocked from solving captchas, try again later';
-        await log.error(error);
+        await logger.error(error);
         throw new Error(error);
     }
 };
 
-export const isAudioLinkExist = async (log: Logger, imagesFrame: Frame) => {
-    await log.debug('waiting for audio link');
+export const isAudioLinkExist = async (logger: Logger, imagesFrame: Frame) => {
+    await logger.debug('waiting for audio link');
     const exists = isElementExists({
         window: imagesFrame,
         selector: Selectors.captchaDownloadLink,
-        log,
+        logger,
         timeout: 5000,
     });
 
     if (!exists) {
-        await log.warn('Audio link not found, reloading captcha');
+        await logger.warn('Audio link not found, reloading captcha');
     }
 
     return exists;
 };
 
-export const getAudioSrc = async (log: Logger, imagesFrame: Frame) => {
-    await log.debug('getting audio src');
+export const getAudioSrc = async (logger: Logger, imagesFrame: Frame) => {
+    await logger.debug('getting audio src');
     const value = getElementAttribute({
         window: imagesFrame,
         selector: Selectors.captchaAudioSrc,
         attribute: 'src',
-        log,
+        logger,
         visible: false,
     });
 
     if (!value) {
-        await log.warn('Audio src is empty, retrying');
+        await logger.warn('Audio src is empty, retrying');
     }
 
     return value;
 };
 
 export const setCaptchaText = async (
-    log: Logger,
+    logger: Logger,
     imagesFrame: Frame,
     audioTranscript: string
 ) => {
-    await log.debug('setting captcha text');
+    await logger.debug('setting captcha text');
     await setText({
         window: imagesFrame,
         selector: Selectors.captchaAudioResponse,
         text: audioTranscript,
-        log,
+        logger,
     });
 };
 
-export const submitCaptcha = async (log: Logger, imagesFrame: Frame) => {
-    await log.debug('clicking on captcha submit button');
+export const submitCaptcha = async (logger: Logger, imagesFrame: Frame) => {
+    await logger.debug('clicking on captcha submit button');
     await clickOnElement({
         window: imagesFrame,
         selector: Selectors.captchaSubmitButton,
-        log,
+        logger,
     });
 };
 
-export const reloadCaptcha = async (log: Logger, frame: Frame) => {
-    await log.debug('Reloading captcha');
+export const reloadCaptcha = async (logger: Logger, frame: Frame) => {
+    await logger.debug('Reloading captcha');
     await clickOnElement({
         window: frame,
         selector: Selectors.reloadCaptchaButton,
-        log,
+        logger,
     });
 };

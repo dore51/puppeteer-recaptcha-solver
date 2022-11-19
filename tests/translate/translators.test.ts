@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { translators } from '../../src';
+import { Translators } from '../../src';
 
 const mockAudioBuffer = Buffer.from('test');
 const mockAxiosPost = jest.fn();
@@ -26,7 +26,7 @@ export const responses = {
 describe('translators', () => {
     jest.spyOn(axios, 'post').mockImplementation(mockAxiosPost);
     it('should translate audio to text', async () => {
-        for (const [name, translator] of Object.entries(translators)) {
+        for (const [name, translator] of Object.entries(Translators)) {
             const response = responses[name as keyof typeof responses];
             mockAxiosPost.mockResolvedValue(response);
             const text = await translator(mockAudioBuffer, 'test-api-key');
@@ -35,7 +35,7 @@ describe('translators', () => {
     });
 
     it('should throw error if no api key is provided', async () => {
-        for (const [name, translator] of Object.entries(translators)) {
+        for (const [name, translator] of Object.entries(Translators)) {
             await expect(translator(mockAudioBuffer)).rejects.toThrow(
                 `${name} translator requires API key`
             );
@@ -43,7 +43,7 @@ describe('translators', () => {
     });
 
     it('should parse correct text from response', async () => {
-        for (const [name, translator] of Object.entries(translators)) {
+        for (const [name, translator] of Object.entries(Translators)) {
             const response = responses[name as keyof typeof responses];
             mockAxiosPost.mockResolvedValue({
                 data: JSON.stringify(response.data),
@@ -54,7 +54,7 @@ describe('translators', () => {
     });
 
     it('should parse empty text from response', async () => {
-        for (const translator of Object.values(translators)) {
+        for (const translator of Object.values(Translators)) {
             mockAxiosPost.mockResolvedValue({
                 data: '',
             });

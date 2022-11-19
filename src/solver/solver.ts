@@ -19,96 +19,102 @@ import { Translator } from '../translate/translators';
 
 interface SolveCaptchaProps {
     page: Page;
-    log: Logger;
+    logger: Logger;
     translator: Translator;
     maxRetries: number;
-    apiKey: string;
+    apiKey?: string;
 }
 
 export const solveCaptcha = async ({
     page,
-    log,
+    logger,
     maxRetries,
     translator,
     apiKey,
 }: SolveCaptchaProps) => {
     let numberOfRetries = 0;
-    const captchaIframe = await switchToCaptchaIframe(log, page);
-    await clickOnCheckbox(log, captchaIframe);
+    const captchaIframe = await switchToCaptchaIframe(logger, page);
+    await clickOnCheckbox(logger, captchaIframe);
 
-    const checked = await isCaptchaChecked(log, captchaIframe);
+    const checked = await isCaptchaChecked(logger, captchaIframe);
 
     if (!checked) {
-        await log.info(
+        await logger.info(
             'captcha is not checked after click, trying to solve with audio'
         );
-        const imagesFrame = await switchToImagesIframe(log, page);
-        await clickOnAudioButton(log, imagesFrame);
-        await verifyIfBlocked(log, imagesFrame);
+        const imagesFrame = await switchToImagesIframe(logger, page);
+        await clickOnAudioButton(logger, imagesFrame);
+        await verifyIfBlocked(logger, imagesFrame);
 
         while (shouldRetry(numberOfRetries, maxRetries)) {
             numberOfRetries++;
-            await log.info(
+            await logger.info(
                 `Solving captcha, attempt ${numberOfRetries}/${maxRetries}`
             );
 
-            const isAudioLinkExists = await isAudioLinkExist(log, imagesFrame);
+            const isAudioLinkExists = await isAudioLinkExist(
+                logger,
+                imagesFrame
+            );
             if (!isAudioLinkExists) {
-                await reloadCaptcha(log, imagesFrame);
+                await reloadCaptcha(logger, imagesFrame);
                 continue;
             }
 
-            const audioSrc = await getAudioSrc(log, imagesFrame);
+            const audioSrc = await getAudioSrc(logger, imagesFrame);
             if (!audioSrc) {
-                await reloadCaptcha(log, imagesFrame);
+                await reloadCaptcha(logger, imagesFrame);
                 continue;
             }
 
-            const audioBuffer = await downloadAudio(log, audioSrc);
+            const audioBuffer = await downloadAudio(logger, audioSrc);
             if (!audioBuffer) {
-                await reloadCaptcha(log, imagesFrame);
+                await reloadCaptcha(logger, imagesFrame);
                 continue;
             }
 
             const audioTranscript = await translateAudio({
                 audioBuffer,
-                log,
+                logger,
                 translator,
                 apiKey,
             });
             if (!audioTranscript) {
-                await reloadCaptcha(log, imagesFrame);
+                await reloadCaptcha(logger, imagesFrame);
                 continue;
             }
 
-            await setCaptchaText(log, imagesFrame, audioTranscript);
-            await submitCaptcha(log, imagesFrame);
+            await setCaptchaText(logger, imagesFrame, audioTranscript);
+            await submitCaptcha(logger, imagesFrame);
 
-            const isCaptchaSolved = await isCaptchaChecked(log, captchaIframe);
+            const isCaptchaSolved = await isCaptchaChecked(
+                logger,
+                captchaIframe
+            );
             if (isCaptchaSolved) {
-                await log.info('Captcha solved successfully');
+                await logger.info('Captcha solved successfully');
                 return true;
             }
 
-            await log.warn('Captcha was not solved');
+            await logger.warn('Captcha was not solved');
 
             const isMultipleSolutionErrorExists = await isMultipleSolutionError(
-                log,
+                logger,
                 imagesFrame
             );
             if (isMultipleSolutionErrorExists) {
-                await log.error(
+                await logger.error(
                     'Multiple solutions error, captcha cannot be solved'
                 );
                 return false;
             }
 
             if (shouldRetry(numberOfRetries, maxRetries)) {
-                await reloadCaptcha(log, imagesFrame);
+                await reloadCaptcha(logger, imagesFrame);
             }
         }
     } else {
-        await log.info('Captcha is checked');
+        await logger.info('Captcha is checked');
         return true;
     }
 

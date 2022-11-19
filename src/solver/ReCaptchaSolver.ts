@@ -5,40 +5,49 @@ import { Translator, witAI } from '../translate/translators';
 
 interface ReCaptchaSolverProps {
     page: Page;
-    log?: Logger;
+    logger?: Logger;
     translator?: Translator;
     maxRetries?: number;
+    apiKey?: string;
 }
 
 class ReCaptchaSolver {
     private readonly page: Page;
-    private readonly log: Logger;
+    private readonly logger: Logger;
     private readonly maxRetries: number;
     private readonly translator: Translator;
+    private readonly apiKey?: string;
 
-    constructor({ page, log, maxRetries, translator }: ReCaptchaSolverProps) {
+    constructor({
+        page,
+        logger,
+        maxRetries,
+        translator,
+        apiKey,
+    }: ReCaptchaSolverProps) {
         this.page = page;
-        this.log = log || defaultLogger;
+        this.logger = logger || defaultLogger;
         this.maxRetries = maxRetries || 3;
         this.translator = translator || witAI;
+        this.apiKey = apiKey;
     }
 
-    public async solve(apiKey: string): Promise<boolean> {
-        await this.log.info('Starting to solve captcha');
+    public async solve(): Promise<boolean> {
+        await this.logger.info('Starting to solve captcha');
         try {
             const res = await solveCaptcha({
                 page: this.page,
-                log: this.log,
+                logger: this.logger,
                 maxRetries: this.maxRetries,
                 translator: this.translator,
-                apiKey,
+                apiKey: this.apiKey,
             });
 
-            await this.log.info(`Captcha solved: ${res}`);
+            await this.logger.info(`Captcha solved: ${res}`);
 
             return res;
         } catch (e) {
-            await this.log.error(`Failed to solve captcha: ${e}`);
+            await this.logger.error(`Failed to solve captcha: ${e}`);
             return false;
         }
     }

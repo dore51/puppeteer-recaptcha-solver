@@ -62,7 +62,7 @@ export const googleSpeechToText: Translator = async (
     return parsed?.results?.[0]?.alternatives?.[0]?.transcript;
 };
 
-export const translators = {
+export const Translators = {
     witAI,
     googleSpeechToText,
 };

@@ -5,7 +5,7 @@ import { Selector } from './selector';
 export type Window = Page | Frame;
 export interface BaseProps {
     window: Window;
-    log: Logger;
+    logger: Logger;
     selector: Selector;
 }
 export type SwitchFrameProps = BaseProps & {
