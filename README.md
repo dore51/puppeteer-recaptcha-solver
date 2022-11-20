@@ -76,7 +76,6 @@ Example:
     );
 
     const solved = await bypassCaptcha.solve();
-    await recorder.stop();
 
     console.log('Captcha solved: ', solved);
     await page.screenshot({ path: 'example/example.png' });
