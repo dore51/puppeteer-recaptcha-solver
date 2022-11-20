@@ -34,8 +34,12 @@ export const switchIframe = async ({
             `waiting for sub element "${WaitForSubElement.name}"`
         );
 
-        await frame.waitForSelector(WaitForSubElement.value, {
-            timeout: 20000,
+        window.on('framenavigated', (frame) => {
+            logger.debug(`frame navigated to ${frame.url()}`);
+        });
+
+        window.on('frameattached', (frame) => {
+            logger.debug(`frame attached ${frame.url()}`);
         });
 
         return frame;
