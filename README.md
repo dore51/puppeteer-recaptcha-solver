@@ -273,14 +273,18 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 ## Built With
 
-* node
-* puppeteer 
-* prettier
-* axios
-* jest
-* puppeteer-screen-recorder
-* tslint
+This package has the following dependencies:
 
+* [Axios](https://github.com/axios/axios): A promise-based HTTP client for the browser and Node.js. Axios is used to make HTTP requests in the package.
+
+The following dependencies are only required for development and testing purposes:
+
+* [Node.js](https://nodejs.org/en/): A JavaScript runtime built on Chrome's V8 JavaScript engine. Node.js is required to run the package.
+* [Puppeteer](https://github.com/puppeteer/puppeteer): A Node library that provides a high-level API to control Chrome or Chromium over the DevTools Protocol. Puppeteer is used to automate and control the browser in order to solve the reCAPTCHA challenge.
+* [Prettier](https://prettier.io/): A code formatter that enforces a consistent style across the codebase.
+* [Jest](https://github.com/facebook/jest): A testing framework for JavaScript. 
+* [puppeteer-screen-recorder](https://github.com/checkly/puppeteer-screen-recorder): A utility for recording screencasts of a Puppeteer page. 
+* [TSLint](https://palantir.github.io/tslint/): A static analysis tool that checks TypeScript code for readability, maintainability, and functionality errors.
 
 ## Authors
 
