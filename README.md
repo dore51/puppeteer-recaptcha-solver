@@ -98,13 +98,13 @@ Example:
 ### Constructor
 
 ```ts
-ReCaptchaSolver({
-  page,
-  logger,
-  maxRetries,
-  transcriber,
-  apiKey,
-}: ReCaptchaSolverProps)
+ const solver = new ReCaptchaSolver({
+      page,
+      log,
+      maxRetries: 3,
+      transcriber: Transcribers.witAI,
+      apiKey: 'YOUR_API_KEY'
+});
 ```
 
 A constructor to the object.
@@ -125,7 +125,7 @@ Supported options for the `constructor` field are listed below.
 ### Solve
 
 ```ts
-solve(): Promise<boolean>
+const solved: boolean = await solver.solve();
 ```
 
 A command that will start the solving process.
