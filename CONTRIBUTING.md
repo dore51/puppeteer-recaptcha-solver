@@ -31,7 +31,7 @@ All types of contributions are encouraged and valued. See the [Table of Contents
 This project and everyone participating in it is governed by the
 [puppeteer-recaptcha-solver Code of Conduct](https://github.com/dore51/puppeteer-recaptcha-solver/CODE_OF_CONDUCT.md).
 By participating, you are expected to uphold this code. Please report unacceptable behavior
-to <>.
+to `eitan.dor@gmail.com`.
 
 
 ## I Have a Question
@@ -134,25 +134,36 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/dore51
 <!-- You might want to create an issue template for enhancement suggestions that can be used as a guide and that defines the structure of the information to be included. If you do so, reference it here in the description. -->
 
 ### Your First Code Contribution
-<!-- TODO
-include Setup of env, IDE and typical getting started instructions?
 
--->
+Start with cloning this repo on your local machine:
 
-### Improving The Documentation
-<!-- TODO
-Updating, improving and correcting the documentation
+```sh
+$ git clone https://github.com/dore51/puppeteer-captcha-solver.git
+$ cd puppeteer-captcha-solver
+```
 
--->
+To install and set up the library, run:
 
-## Styleguides
-### Commit Messages
-<!-- TODO
+```sh
+$ npm install
+```
 
--->
+### To check that everything works
+
+```sh
+$ npm run example
+```
+
+### Running the tests
+
+```sh
+$ npm test
+```
+
 
 ## Join The Project Team
-<!-- TODO -->
+
+We are always looking for new contributors to help us improve puppeteer-recaptcha-solver. There are many ways to help, from [writing tutorials or blog posts](#write-tutorials--blog-posts), improving the [documentation](#improve-the-documentation), submitting [bug reports](#submit-bug-reports) and [feature requests](#submit-feature-requests) or writing code which can be incorporated into puppeteer-recaptcha-solver itself.
 
 <!-- omit in toc -->
 ## Attribution

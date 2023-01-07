@@ -1,5 +1,5 @@
 {
-  "name": "@dore51/puppeteer-recaptcha-solver",
+  "name": "puppeteer-recaptcha-solver",
   "version": "1.0.0",
   "description": "ReCaptcha solver for puppeteer",
   "main": "lib/index.js",
@@ -23,7 +23,9 @@
   "keywords": [
     "captcha",
     "captcha solver",
-    "google captcha"
+    "google captcha",
+    "google recaptcha",
+    "puppeteer captcha"
   ],
   "author": "dore51",
   "license": "MIT",
@@ -48,8 +50,5 @@
   },
   "files": [
     "lib/**/*"
-  ],
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  }
+  ]
 }
