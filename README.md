@@ -43,7 +43,8 @@ This project requires NodeJS (version 8 or later) and NPM.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will help to you install the package in your project, set it and use it.
+See Contributing for notes on how to help and contribute this project.
 
 ## Installation
 
