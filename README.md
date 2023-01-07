@@ -54,7 +54,7 @@ See Contributing for notes on how to help and contribute this project.
 To install and set up the library, run:
 
 ```sh
-$ npm install @dore51/puppeteer-recaptcha-solver
+$ npm install puppeteer-recaptcha-solver
 ```
 
 # Usage
